@@ -1,3 +1,4 @@
+import { ProcessHttpMsgService } from './services/process-http-msg.service';
 import { MatDialogModule } from '@angular/material/dialog';
 import { LeaderService } from './services/leader.service';
 import { PromotionService } from './services/promotion.service';
@@ -74,7 +75,8 @@ import { baseUrl } from './shared/baseurl';
     DishService,
     PromotionService,
     LeaderService,
-    { provide: 'BaseURL', useValue: baseUrl}
+    { provide: 'BaseURL', useValue: baseUrl},
+    ProcessHttpMsgService
   ],
   entryComponents:[
     LoginComponent
