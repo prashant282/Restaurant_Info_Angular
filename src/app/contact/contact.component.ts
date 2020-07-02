@@ -2,7 +2,7 @@ import { FeedbackService } from './../services/feedback.service';
 import { Feedback, ContactType } from './../shared/feedback';
 import { Component, OnInit, createPlatformFactory, ViewChild } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import { flyInOut } from '../animations/app.animation';
+import { flyInOut, expand } from '../animations/app.animation';
 
 @Component({
   selector: 'app-contact',
@@ -14,7 +14,8 @@ import { flyInOut } from '../animations/app.animation';
 
   },
   animations:[
-    flyInOut()
+    flyInOut(),
+    expand()
   ]
 })
 export class ContactComponent implements OnInit {
@@ -27,6 +28,7 @@ export class ContactComponent implements OnInit {
   submitting: boolean=false;
   feedbackResult:Feedback;
   showFeedback:boolean=false;
+  showForm:boolean=true;
 
 
 
@@ -104,6 +106,7 @@ export class ContactComponent implements OnInit {
   onSubmit(){
     this.feedback=this.feedbackForm.value;
     this.submitting=true;
+    this.showForm=false;
     console.log(this.feedback);
     this.feedbackService.submitFeedback(this.feedback).subscribe(
       feedback=> {this.feedbackResult=feedback;
@@ -111,9 +114,11 @@ export class ContactComponent implements OnInit {
       this.showFeedback=true;
       setTimeout(()=>{
         this.showFeedback=false;
+        this.showForm=true;
       },3000);},
       errmess=> {this.errMess=errmess,
-      this.submitting=false;});
+      this.submitting=false;
+      this.showForm=false;});
     this.feedbackForm.reset({
       firstname:'',
       lastname:'',
