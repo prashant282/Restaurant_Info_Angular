@@ -1,3 +1,4 @@
+import { FeedbackService } from './../services/feedback.service';
 import { Feedback, ContactType } from './../shared/feedback';
 import { Component, OnInit, createPlatformFactory, ViewChild } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -22,6 +23,12 @@ export class ContactComponent implements OnInit {
   feedbackForm: FormGroup;
   feedback: Feedback;
   contactType=ContactType;
+  errMess: string="";
+  submitting: boolean=false;
+  feedbackResult:Feedback;
+  showFeedback:boolean=false;
+
+
 
   formErrors={
     'firstname': '',
@@ -51,7 +58,8 @@ export class ContactComponent implements OnInit {
     },
   };
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+      private feedbackService: FeedbackService) {
     this.createForm();
    }
 
@@ -95,7 +103,17 @@ export class ContactComponent implements OnInit {
 
   onSubmit(){
     this.feedback=this.feedbackForm.value;
+    this.submitting=true;
     console.log(this.feedback);
+    this.feedbackService.submitFeedback(this.feedback).subscribe(
+      feedback=> {this.feedbackResult=feedback;
+      this.submitting=false;
+      this.showFeedback=true;
+      setTimeout(()=>{
+        this.showFeedback=false;
+      },3000);},
+      errmess=> {this.errMess=errmess,
+      this.submitting=false;});
     this.feedbackForm.reset({
       firstname:'',
       lastname:'',
